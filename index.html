@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+	<head>
+		<meta charset="UTF-8">
+		<title>老瓢新闻网</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="//cdn.bootcss.com/angular.js/1.4.6/angular.min.js"></script>
+		<script src="//cdn.bootcss.com/angular.js/1.4.6/angular-route.js"></script>
+		<script src="//cdn.bootcss.com/angular.js/1.4.6/angular-sanitize.min.js"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/ng-infinite-scroll.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div ng-controller="myCtrl" id="contain" ng-init="cha(1)">
+			<!--<h4>老瓢新闻网</h4>-->
+			<ul id = "nav">
+				<li><a href="#/" ng-click="cha(1)">头条</a></li>
+				<li><a href="#/" ng-click="cha(2)">娱乐</a></li>
+				<li><a href="#/" ng-click="cha(3)">军事</a></li>
+				<li><a href="#/" ng-click="cha(4)">汽车</a></li> 
+				<li><a href="#/" ng-click="cha(5)">财经</a></li>
+				<li><a href="#/" ng-click="cha(6)">笑话</a></li>
+				<li><a href="#/"  ng-click="cha(7)">体育</a></li>
+				<li><a href="#/"  ng-click="cha(8)">科技</a></li>
+			</ul>
+			<!--<div id="search"/>
+				<input type="text" name="" id="" value="" />
+				<div>搜索</div>
+			</div>--> 
+			<div ng-view id ="content"></div>
+
+		</div>
+
+		<script type="text/javascript">
+			var app = angular.module("myApp" , ["ngRoute","ngSanitize"]) ;
+			
+			app.config(["$routeProvider" , function ($routeProvider) {
+				$routeProvider.when("/" , {
+					controller: "myCtrl",
+			        templateUrl: "list.html"
+				})
+				.when("/view/:news_id" , {
+					controller: "myCtrla",
+					templateUrl: "detail.html"
+				})
+				.otherwise({
+			        redirectTo:"/"
+			    });
+			}])
+			// $q 是内置服务，所以可以直接使用  
+			app.factory('UserInfo', ['$http', '$q', function ($http, $q) {  
+			  	return {  
+			    	query : function(num) {  
+			      		var deferred = $q.defer(); // 声明延后执行，表示要去监控后面的执行  
+			      		$http.jsonp(
+		         			"http://api.dagoogle.cn/news/get-news?&callback=JSON_CALLBACK&tableNum="+num+"&pagesize=50"
+						)
+			      		.success(function(data, status, headers, config) {  
+			        		deferred.resolve(data);  // 声明执行成功，即http请求数据成功，可以返回数据了  
+			      		})
+			      		.error(function(data, status, headers, config) {  
+			        		deferred.reject(data);   // 声明执行失败，即服务器返回错误  
+			      		});  
+			      		return deferred.promise;   // 返回承诺，这里并不是最终数据，而是访问最终数据的API  
+			    	} // end query  
+			  	};  
+			}]);  
+			var numaa = 1;
+			
+			app.controller('myCtrl', ['$scope', 'UserInfo', function ($scope, UserInfo) { // 引用我们定义的UserInfo服务  	
+				$scope.cha=function (num) {
+					numaa=num;
+					var promise = UserInfo.query();// 同步调用，获得承诺接口
+					promise = UserInfo.query(num)
+					promise.then(function(data) {  // 调用承诺API获取数据 .resolve 
+					console.log(data.data)
+    					$scope.listdata = data.data ;
+    					$scope.timearr=[]
+    					for (var i = 0 ;i<data.data.length;i++) {
+    						//console.log( typeof data.data[i].edit_time)
+    						//console.log(trantime(data.data[i].edit_time))
+    						$scope.timearr.push(trantime(data.data[i].edit_time))
+    					}
+
+    					//console.log($scope.timearr)
+					},
+					function(data) {  // 处理错误 .reject
+	    				$scope.user = {error: '用户不存在！'};  
+					}); 
+					
+				}	
+			}]);  
+			app.controller("myCtrla" , ["$scope" , "UserInfo" , "$routeParams" , function($scope , UserInfo , $routeParams){
+				/*console.log($routeParams)
+				$scope.datail=[$routeParams.news_id]*/
+				var promise = UserInfo.query(numaa); // 同步调用，获得承诺接口  
+				promise.then(function(data) {  // 调用承诺API获取数据 .resolve 
+					//console.log(data)
+    				var arr = data.data;
+    				//console.log(arr)
+    				//console.log($routeParams)
+    				
+    				for (var i= 0 ;i<arr.length;i++) {
+    					if (arr[i].news_id == $routeParams.news_id) {
+    						$scope.datail=arr[i];	
+    						console.log($scope.datail.digest);
+    						if ($scope.datail.content=="") {
+    							$scope.degist='<div>'+$scope.datail.digest+'</div>';
+    						}else{
+    							$scope.degist = $scope.datail.content;
+    						}
+    					}
+    				}
+				},
+				function(data) {  // 处理错误 .reject
+    				$scope.user = {error: '用户不存在！'};  
+				});
+			}])
+			function trantime(num) {	
+				var d = new Date(num * 1000);    //根据时间戳生成的时间对象
+				var date = (d.getFullYear()) + "-" + 
+				           (d.getMonth() + 1) + "-" +
+				           (d.getDate()) + " " + 
+				           (d.getHours()) + ":" + 
+				           (d.getMinutes()) + ":" + 
+				           (d.getSeconds());
+				return date
+			}
+			
+		</script>
+	</body>
+</html>
+

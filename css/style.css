@@ -1,0 +1,162 @@
+#contain{
+	width: 100%;
+	height:100%;
+	display: flex;
+	flex-direction:column ;
+}
+
+#nav{
+	display: -webkit-flex;
+	width: 100%;
+	height: 10%;
+	background: #d53c3e;
+	flex-wrap: wrap;
+	margin-bottom: 2%;
+}
+#nav li{
+	width: 25%;
+	line-height: 1.42rem;
+	text-align: center;
+	border-bottom: 1px solid #ccc;
+	height: 50%;
+	font-size:0.7rem;
+	color: #fff;
+}
+#nav li a{
+	text-decoration: none;
+	color: #fff;
+}
+#search{
+	width: 100%;
+	height: 5%;
+	display: -webkit-flex;
+	margin-top: 2.5%;
+	margin-bottom: 2.5%;
+}
+#search :nth-child(1){
+	width:80% ;
+	height: 100%;
+	border:1px solid red;
+	border-right: none;
+	border-top-left-radius:10px ;
+	border-bottom-left-radius:10px ;
+	outline: none;
+}
+
+#search :nth-child(2){
+	width:20% ;
+	height: 100%;
+	background: #d53c3e;
+	text-align: center;
+	line-height: 1.42rem;
+	border:1px solid red;
+	border-left: none;
+	border-top-right-radius:10px ;
+	border-bottom-right-radius:10px ;
+	color: #fff;
+	font-size: 0.7rem;
+}
+#content{
+	width: 100%;
+	height: 88%;
+	position: relative;
+	
+}
+#content .test{
+	width: 100%;
+	height:100%;
+	position: relative;
+	overflow-x: auto;	
+}
+#content .test  .cann{
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+#content .test .cann li{
+	width: 100%;
+	height:5rem;
+	display: -webkit-flex;
+	border-bottom:1px solid #ccc;
+	padding: 0.75rem
+}
+.cann p:nth-of-type(2){
+	height: 50%;
+	width: 100%;
+	margin-top: 0.5rem;
+}
+#content .test .cann li img{
+	width: 80%;
+	height:3.5rem;
+}
+.cann span:nth-of-type(1){
+	display: block;
+	text-align: center;
+	font-size: 0.5rem;
+}
+#content .test .cann li a{
+	display: block;
+	width: 49%;
+	text-align: center;
+}
+#content .nrirong{
+	width: 100%;
+	height:95%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	overflow-x: auto;
+	background: #fff;
+}
+#content .nrirong p:nth-of-type(1){
+	width: 100%;
+	padding: 0 0.2rem;
+	height: 5%;
+	line-height: 1.42rem;
+	font-size: 0.6rem;
+	font-weight: bold;
+	text-align: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: #fff;
+
+}
+#content .nrirong p:nth-of-type(2){
+	width: 100%;
+	padding: 0.5rem 0.5rem;
+	padding-top:1.5rem ;
+
+}
+#content .btn{
+	width: 100%;
+	height: 5%;
+	display: -webkit-flex;
+	position: fixed;
+	left: 0;
+	bottom:0;
+	background: lightcoral;
+	
+}
+#content .btn a{
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	line-height: 1.42rem;
+	color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
